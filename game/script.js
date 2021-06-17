@@ -50,8 +50,6 @@ function init() {
         100 // far plane
     );
 
-
-
     camera = new THREE.PerspectiveCamera(
         50, // field of view
         aspect, // aspect ratio
