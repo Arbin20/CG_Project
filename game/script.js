@@ -50,15 +50,15 @@ function init() {
         100 // far plane
     );
 
-    /*
-    // If you want to use perspective camera instead, uncomment these lines
+
+
     camera = new THREE.PerspectiveCamera(
-      45, // field of view
-      aspect, // aspect ratio
-      1, // near plane
-      100 // far plane
+        50, // field of view
+        aspect, // aspect ratio
+        1, // near plane
+        100 // far plane
     );
-    */
+
 
     camera.position.set(4, 4, 4);
     camera.lookAt(0, 0, 0);
