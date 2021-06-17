@@ -181,7 +181,7 @@ function cutBox(topLayer, overlap, size, delta) {
     // Update CannonJS model
     topLayer.cannonjs.position[direction] -= delta / 2;
 
-    // Replace shape to a smaller one (in CannonJS you can't simply just scale a shape)
+    // Replace shape to a smaller one
     const shape = new CANNON.Box(
         new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
     );
@@ -282,7 +282,6 @@ function animation(time) {
         const previousLayer = stack[stack.length - 2];
 
         // The top level box should move if the game has not ended AND
-        // it's either NOT in autopilot or it is in autopilot and the box did not yet reach the robot position
         const boxShouldMove = !gameEnded &&
             (!autopilot ||
                 (autopilot &&
@@ -300,8 +299,7 @@ function animation(time) {
                 missedTheSpot();
             }
         } else {
-            // If it shouldn't move then is it because the autopilot reached the correct position?
-            // Because if so then next level is coming
+
             if (autopilot) {
                 splitBlockAndAddNextOneIfOverlaps();
                 setRobotPrecision();
