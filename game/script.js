@@ -22,6 +22,7 @@ function setRobotPrecision() {
     robotPrecision = Math.random() * 1 - 0.5;
 }
 
+
 function init() {
     autopilot = true;
     gameEnded = false;
@@ -139,7 +140,7 @@ function addOverhang(x, z, width, depth) {
 function generateBox(x, y, z, width, depth, falls) {
     // ThreeJS
     const geometry = new THREE.BoxGeometry(width, boxHeight, depth);
-    const color = new THREE.Color(`hsl(${30 + stack.length * 4}, 100%, 50%)`);
+    const color = new THREE.Color(`hsl(${30 + stack.length * 4}, 100%, 50%)`); //Colors
     const material = new THREE.MeshLambertMaterial({ color });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
