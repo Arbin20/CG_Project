@@ -116,10 +116,10 @@ function startGame() {
         // First layer
         addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
     }
-
+    //Camera Position
     if (camera) {
         // Reset camera positions
-        camera.position.set(4, 4, 4);
+        camera.position.set(5, 5, 5);
         camera.lookAt(0, 0, 0);
     }
 }
