@@ -272,11 +272,11 @@ function missedTheSpot() {
     gameEnded = true;
     if (resultsElement && !autopilot) resultsElement.style.display = "flex";
 }
-
+//Moving speed
 function animation(time) {
     if (lastTime) {
         const timePassed = time - lastTime;
-        const speed = 0.008;
+        const speed = 0.006;
 
         const topLayer = stack[stack.length - 1];
         const previousLayer = stack[stack.length - 2];
