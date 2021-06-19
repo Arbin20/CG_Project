@@ -67,11 +67,12 @@ function init() {
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize);
 
+
     // First layer
     addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
 
     // Set up lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
