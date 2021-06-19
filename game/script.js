@@ -197,6 +197,7 @@ window.addEventListener("keydown", function(event) {
         eventHandler();
         return;
     }
+    //Restart the game
     if (event.key == "R" || event.key == "r") {
         event.preventDefault();
         startGame();
