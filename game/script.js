@@ -148,6 +148,7 @@ function generateBox(x, y, z, width, depth, falls) {
     scene.add(mesh);
 
     // CannonJS
+    //Shape of the box
     const shape = new CANNON.Box(
         new CANNON.Vec3(width / 2, boxHeight / 2, depth / 2)
     );
