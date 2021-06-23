@@ -1,15 +1,15 @@
-window.focus(); // Capture keys right away
+window.focus();
 
 let camera, scene, renderer; // ThreeJS globals
 let world; // CannonJs world
-let lastTime; // Last timestamp of animation
-let stack; // Parts that stay solid on top of each other
-let overhangs; // Overhanging parts that fall down
-const boxHeight = 1; // Height of each layer
-const originalBoxSize = 3; // Original width and height of a box
-let autopilot;
+let lastTime; // Lëvizja e fundit e animacionit
+let stack; // Pjesët e objektit të cilat qëndrojnë njëra pas tjetrës (stack)
+let overhangs; // Pjesë të objektit (figurës) të cilat bien poshtë
+const boxHeight = 1; // Lartësia e objektit
+const originalBoxSize = 3; //Gjerësia dhe lartësia origjinale e një kutie   
+let autopilot; //Mundëson që kutia që lëviz të orientohen afër kutis tjetër
 let gameEnded;
-let robotPrecision; // Determines how precise the game is on autopilot
+let robotPrecision; // Përcakton sa precize është loja në autopilot
 
 const scoreElement = document.getElementById("score");
 const instructionsElement = document.getElementById("instructions");
@@ -17,7 +17,7 @@ const resultsElement = document.getElementById("results");
 
 init();
 
-// Determines how precise the game is on autopilot
+// Përcakton sa precize është loja në autopilot
 function setRobotPrecision() {
     robotPrecision = Math.random() * 1 - 0.5;
 }
@@ -33,45 +33,45 @@ function init() {
 
     // Initialize CannonJS
     world = new CANNON.World();
-    world.gravity.set(0, -10, 0); // Gravity pulls things down
+    world.gravity.set(0, -10, 0); // Graviteti i cili tërheq kutitë
     world.broadphase = new CANNON.NaiveBroadphase();
     world.solver.iterations = 40;
 
-    // Initialize ThreeJs
+    // Incializimi i ThreeJs
     const aspect = window.innerWidth / window.innerHeight;
     const width = 10;
     const height = width / aspect;
 
     camera = new THREE.OrthographicCamera(
-        width / -2, // left
-        width / 2, // right
-        height / 2, // top
-        height / -2, // bottom
-        0, // near plane
-        100 // far plane
+        width / -2, // majtë
+        width / 2, // djathë
+        height / 2, // lartë
+        height / -2, // poshtë
+        0, // afër
+        100 // larg
     );
 
     camera = new THREE.PerspectiveCamera(
-        50, // field of view
-        aspect, // aspect ratio
-        1, // near plane
-        100 // far plane
+        50, // Shikimi i objketit
+        aspect, // raporti i gjerësisë me lartësinë e një imazhi ose ekrani.
+        1, // afër 
+        100 // larg 
     );
 
 
-    camera.position.set(4, 4, 4);
+    camera.position.set(4, 4, 4); //Pozicionimi i kamerës
     camera.lookAt(0, 0, 0);
 
     scene = new THREE.Scene();
 
-    // Foundation
+    // Baza
     addLayer(0, 0, originalBoxSize, originalBoxSize);
 
 
-    // First layer
+    // Shtresa e parë
     addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
 
-    // Set up lights
+    // Dritat
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
@@ -79,7 +79,7 @@ function init() {
     dirLight.position.set(10, 20, 0);
     scene.add(dirLight);
 
-    // Set up renderer
+    // Rendereri
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animation);
@@ -98,42 +98,42 @@ function startGame() {
     if (scoreElement) scoreElement.innerText = 0;
 
     if (world) {
-        // Remove every object from world
+        // largon çdo objekt nga bota 
         while (world.bodies.length > 0) {
             world.remove(world.bodies[0]);
         }
     }
 
     if (scene) {
-        // Remove every Mesh from the scene
+        // Hiqni çdo Mesh nga skena   //Një mesh është një objekt që merr një gjeometri
         while (scene.children.find((c) => c.type == "Mesh")) {
             const mesh = scene.children.find((c) => c.type == "Mesh");
             scene.remove(mesh);
         }
 
-        // Foundation
+        // Baza
         addLayer(0, 0, originalBoxSize, originalBoxSize);
 
-        // First layer
+        // Shtresa e parë
         addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
     }
-    //Camera Position
+    //Pozicionimi i kamerës
     if (camera) {
-        // Reset camera positions
+        // Pozicionimi i kamerës kur bëhet reset
         camera.position.set(5, 5, 5);
         camera.lookAt(0, 0, 0);
     }
 }
 
 function addLayer(x, z, width, depth, direction) {
-    const y = boxHeight * stack.length; // Add the new box one layer higher
+    const y = boxHeight * stack.length; // Shton kutinë e re një shtresë më të lartë
     const layer = generateBox(x, y, z, width, depth, false);
     layer.direction = direction;
     stack.push(layer);
 }
 
 function addOverhang(x, z, width, depth) {
-    const y = boxHeight * (stack.length - 1); // Add the new box one the same layer
+    const y = boxHeight * (stack.length - 1); // Shton kutinë e re në të njëjtën shtresë
     const overhang = generateBox(x, y, z, width, depth, true);
     overhangs.push(overhang);
 }
@@ -141,20 +141,20 @@ function addOverhang(x, z, width, depth) {
 function generateBox(x, y, z, width, depth, falls) {
     // ThreeJS
     const geometry = new THREE.BoxGeometry(width, boxHeight, depth);
-    const color = new THREE.Color(`hsl(${30 + stack.length * 4}, 100%, 50%)`); //Colors
+    const color = new THREE.Color(`hsl(${30 + stack.length * 4}, 100%, 50%)`); //Ngjyrat
     const material = new THREE.MeshLambertMaterial({ color });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     scene.add(mesh);
 
     // CannonJS
-    //Shape of the box
+    //Forma e kutisë
     const shape = new CANNON.Box(
         new CANNON.Vec3(width / 2, boxHeight / 2, depth / 2)
     );
-    let mass = falls ? 5 : 0; // If it shouldn't fall then setting the mass to zero will keep it stationary
-    mass *= width / originalBoxSize; // Reduce mass proportionately by size
-    mass *= depth / originalBoxSize; // Reduce mass proportionately by size
+    let mass = falls ? 5 : 0; // Nëse nuk duhet të bjerë, vendosja e masës në zero do ta mbajë atë të palëvizshme
+    mass *= width / originalBoxSize; //Zvogëloni masën proporcionalisht sipas madhësisë
+    mass *= depth / originalBoxSize;
     const body = new CANNON.Body({ mass, shape });
     body.position.set(x, y, z);
     world.addBody(body);
@@ -172,18 +172,18 @@ function cutBox(topLayer, overlap, size, delta) {
     const newWidth = direction == "x" ? overlap : topLayer.width;
     const newDepth = direction == "z" ? overlap : topLayer.depth;
 
-    // Update metadata
+    // Azhurnoni të dhënat
     topLayer.width = newWidth;
     topLayer.depth = newDepth;
 
-    // Update ThreeJS model
+    // Azhurnoni ThreeJS modelin
     topLayer.threejs.scale[direction] = overlap / size;
     topLayer.threejs.position[direction] -= delta / 2;
 
-    // Update CannonJS model
+    // Azhurnoni CannonJS modelin
     topLayer.cannonjs.position[direction] -= delta / 2;
 
-    // Replace shape to a smaller one
+    // Zëvendësoni formën në një më të vogël
     const shape = new CANNON.Box(
         new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
     );
@@ -200,7 +200,7 @@ window.addEventListener("keydown", function(event) {
         return;
     }
 
-    //Restart the game
+    //Restarto lojën
     if (event.key == "R" || event.key == "r") {
         event.preventDefault();
         startGame();
@@ -231,7 +231,7 @@ function splitBlockAndAddNextOneIfOverlaps() {
     if (overlap > 0) {
         cutBox(topLayer, overlap, size, delta);
 
-        // Overhang
+        // Mbingarkesa
         const overhangShift = (overlap / 2 + overhangSize / 2) * Math.sign(delta);
         const overhangX =
             direction == "x" ?
@@ -246,7 +246,7 @@ function splitBlockAndAddNextOneIfOverlaps() {
 
         addOverhang(overhangX, overhangZ, overhangWidth, overhangDepth);
 
-        // Next layer
+        // Shtresa tjetër
         const nextX = direction == "x" ? topLayer.threejs.position.x : -10;
         const nextZ = direction == "z" ? topLayer.threejs.position.z : -10;
         const newWidth = topLayer.width; // New layer has the same size as the cut top layer
@@ -263,7 +263,7 @@ function splitBlockAndAddNextOneIfOverlaps() {
 function missedTheSpot() {
     const topLayer = stack[stack.length - 1];
 
-    // Turn to top layer into an overhang and let it fall down
+    // Kthen shtresën e sipërme në një tejkalim dhe e lëj të bjerë poshtë
     addOverhang(
         topLayer.threejs.position.x,
         topLayer.threejs.position.z,
@@ -276,7 +276,7 @@ function missedTheSpot() {
     gameEnded = true;
     if (resultsElement && !autopilot) resultsElement.style.display = "flex";
 }
-//Moving speed
+//Shpejtësia e lëvizjes së kutive
 function animation(time) {
     if (lastTime) {
         const timePassed = time - lastTime;
@@ -285,7 +285,7 @@ function animation(time) {
         const topLayer = stack[stack.length - 1];
         const previousLayer = stack[stack.length - 2];
 
-        // The top level box should move if the game has not ended
+        // Kutia e nivelit të lartë duhet të lëvizë nëse loja nuk ka përfunduar
         const boxShouldMove = !gameEnded &&
             (!autopilot ||
                 (autopilot &&
@@ -294,11 +294,11 @@ function animation(time) {
                     robotPrecision));
 
         if (boxShouldMove) {
-            // Keep the position visible on UI and the position in the model in sync
+            //Mbani pozicionin të dukshëm në UI dhe pozicionin në modelin sinkronizues
             topLayer.threejs.position[topLayer.direction] += speed * timePassed;
             topLayer.cannonjs.position[topLayer.direction] += speed * timePassed;
 
-            // If the box went beyond the stack then show up the fail screen
+            // Nëse kutia shkon përtej kutisë tjetër atëherë shfaq ekranin e dështimit (fail)
             if (topLayer.threejs.position[topLayer.direction] > 10) {
                 missedTheSpot();
             }
@@ -310,7 +310,7 @@ function animation(time) {
             }
         }
 
-        // 4 is the initial camera height
+        // 4 është lartësia fillestare e kamerës
         if (camera.position.y < boxHeight * (stack.length - 2) + 4) {
             camera.position.y += speed * timePassed;
         }
@@ -322,9 +322,9 @@ function animation(time) {
 }
 
 function updatePhysics(timePassed) {
-    world.step(timePassed / 1000); // Step the physics world
+    world.step(timePassed / 1000);
 
-    // Copy coordinates from Cannon.js to Three.js
+    // Kopjoni koordinatat nga Cannon.js në Three.js
     overhangs.forEach((element) => {
         element.threejs.position.copy(element.cannonjs.position);
         element.threejs.quaternion.copy(element.cannonjs.quaternion);
@@ -332,7 +332,7 @@ function updatePhysics(timePassed) {
 }
 
 window.addEventListener("resize", () => {
-    // Adjust camera
+    // Rregullon kamerën
     console.log("resize", window.innerWidth, window.innerHeight);
     const aspect = window.innerWidth / window.innerHeight;
     const width = 10;
@@ -341,7 +341,7 @@ window.addEventListener("resize", () => {
     camera.top = height / 2;
     camera.bottom = height / -2;
 
-    // Reset renderer
+    // Ristarto rendererin
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.render(scene, camera);
 });
