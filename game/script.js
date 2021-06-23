@@ -31,7 +31,7 @@ function init() {
     overhangs = [];
     setRobotPrecision();
 
-    // Initialize CannonJS
+    // Incializimi i CannonJS
     world = new CANNON.World();
     world.gravity.set(0, -10, 0); // Graviteti i cili tërheq kutitë
     world.broadphase = new CANNON.NaiveBroadphase();
