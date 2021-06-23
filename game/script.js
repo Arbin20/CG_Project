@@ -285,7 +285,7 @@ function animation(time) {
         const topLayer = stack[stack.length - 1];
         const previousLayer = stack[stack.length - 2];
 
-        // The top level box should move if the game has not ended AND
+        // The top level box should move if the game has not ended
         const boxShouldMove = !gameEnded &&
             (!autopilot ||
                 (autopilot &&
