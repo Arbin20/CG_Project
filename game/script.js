@@ -66,7 +66,7 @@ function init() {
 
     //Fotografia në background
     const loader = new THREE.TextureLoader();
-    loader.load('https://images.unsplash.com/photo-1501619757722-90657a99803b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80', function(texture) {
+    loader.load('https://wallup.net/wp-content/uploads/2018/09/30/291325-night-stars-lake-sky-nature.jpg', function(texture) {
         scene.background = texture;
     });
 
